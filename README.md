@@ -4,7 +4,7 @@ RaceDay is an event management system designed to manage road races and running 
 The system allows participants to register for events, select race categories and view their results, while organisers can create and manage events, categories, enrolments and race results
 
 
-# Project overivew
+# Project overview
 The RaceDay system provides functionality for:
  - User registration and login
  - Participant profile management
@@ -12,5 +12,12 @@ The RaceDay system provides functionality for:
  - Race category management
  - Participant enrolments
  - Race results
+
+# Technologies used
+The RaceDay project used the following tools for Part 1:
+ - drawio
+ - SQL Server Management Studio (SSMS)
+ - Github Actions
+
 
    
