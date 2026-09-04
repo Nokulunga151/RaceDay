@@ -13,6 +13,12 @@ The RaceDay system provides functionality for:
  - Participant enrolments
  - Race results
 
+# User roles
+Organiser
+
+Organisers are responsible for managing RaceDay events. They can create, update and delete events and race categories, view event enrolments, and record or update race results.
+
+
 # Technologies used
 The RaceDay project used the following tools for Part 1:
  - drawio
