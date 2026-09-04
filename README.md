@@ -23,11 +23,20 @@ Participant
 Participants can create an account, manage their profile, view available events and categories, enrol in events, manage their enrolments, and view their race results.
 
 
+# What Part 1 does
+Part 1 establishes the planning and database foundation for the RaceDay system.
+
+- **ERD** – Defines the database entities, relationships, primary keys, foreign keys and cardinalities.
+- **API Endpoint Plan** – Defines the planned API endpoints, HTTP methods, roles, request bodies and expected responses.
+- **SQL Database Script** – Creates and populates the RaceDay database tables, including the required constraints and sample data.
+
+
+
 # Technologies used
 The RaceDay project used the following tools for Part 1:
  - drawio
  - SQL Server Management Studio (SSMS)
- - Github Actions
+ - GitHub Actions
 
 # YouTube Video Link
 - https://youtu.be/UF6xu5px2Qc
