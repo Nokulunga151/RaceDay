@@ -30,7 +30,12 @@ Part 1 establishes the planning and database foundation for the RaceDay system.
 - **API Endpoint Plan** – Defines the planned API endpoints, HTTP methods, roles, request bodies and expected responses.
 - **SQL Database Script** – Creates and populates the RaceDay database tables, including the required constraints and sample data.
 
+# Repository Structure
+The `/docs` folder contains the main documentation and database files for the RaceDay project.
 
+- `RaceDay_ERD.pdf` – Entity Relationship Diagram for the RaceDay database.
+- `RaceDay_API_Endpoint_Plan.pdf` – Planned API endpoints and their requirements.
+- `RaceDay_Database.sql` – SQL script used to create and populate the RaceDay database.
 
 # Technologies used
 The RaceDay project used the following tools for Part 1:
