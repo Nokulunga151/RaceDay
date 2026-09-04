@@ -18,6 +18,10 @@ Organiser
 
 Organisers are responsible for managing RaceDay events. They can create, update and delete events and race categories, view event enrolments, and record or update race results.
 
+Participant
+
+Participants can create an account, manage their profile, view available events and categories, enrol in events, manage their enrolments, and view their race results.
+
 
 # Technologies used
 The RaceDay project used the following tools for Part 1:
