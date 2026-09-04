@@ -19,5 +19,9 @@ The RaceDay project used the following tools for Part 1:
  - SQL Server Management Studio (SSMS)
  - Github Actions
 
+# YouTube Video Link
+- https://youtu.be/UF6xu5px2Qc
+
+
 
    
