@@ -37,6 +37,20 @@ The `/docs` folder contains the main documentation and database files for the Ra
 - `RaceDay_API_Endpoint_Plan.pdf` – Planned API endpoints and their requirements.
 - `RaceDay_Database.sql` – SQL script used to create and populate the RaceDay database.
 
+# How to execute SQL file
+
+The RaceDay database is created using the `RaceDay_Database.sql` script located in the `docs` folder.
+
+### Steps
+
+1. Open **SQL Server Management Studio (SSMS)**.
+2. Connect to the SQL Server instance.
+3. Open `RaceDay_Database.sql`.
+4. Click **Execute** or press **F5** to run the script.
+5. The script creates the RaceDay database tables and inserts sample data.
+6. Use **Object Explorer** and `SELECT` queries to verify that the tables and data were created successfully.
+7. 
+
 # Technologies used
 The RaceDay project used the following tools for Part 1:
  - drawio
