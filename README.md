@@ -60,6 +60,105 @@ The RaceDay project used the following tools for Part 1:
  - SQL Server Management Studio (SSMS)
  - GitHub Actions
 
+# Part 2: API Implementation
+Part 2 implements the RaceDay API using ASP.NET Core and C#.
+
+# Technologies Used
+- C#
+- ASP.NET Core Web API
+- .NET 10
+- Entity Framework Core
+- Microsoft SQL Server
+- SQL Server LocalDB for local development
+- Swagger / OpenAPI
+- xUnit for unit testing
+- GitHub Actions for continuous integration
+
+
+# Project Structure
+The Part 2 solution is located in the RaceDay.Api/ directory.
+- RaceDay.Api/ – ASP.NET Core API project and controllers.
+- RaceDay.Contracts/ – Shared request and response contracts.
+- RaceDay.Api.Tests/ – Unit test project.
+- RaceDay.Api.slnx – Visual Studio solution file.
+- .github/workflows/ – GitHub Actions workflow configuration.
+- docs/ – Part 1 documentation and supporting project files.
+
+# Project Structure
+The Part 2 solution is located in the RaceDay.Api/ directory.
+- RaceDay.Api/ – ASP.NET Core API project and controllers.
+- RaceDay.Contracts/ – Shared request and response contracts.
+- RaceDay.Api.Tests/ – Unit test project.
+- RaceDay.Api.slnx – Visual Studio solution file.
+- .github/workflows/ – GitHub Actions workflow configuration.
+- docs/ – Part 1 documentation and supporting project files.
+
+# Database Setup
+Install SQL Server and SQL Server Management Studio (SSMS), with SQL Server LocalDB available for local development.
+
+- Open the SQL script in the docs/ directory.
+- Create the required database and tables.
+- Configure the RaceDayConnection connection string in the API project's appsettings.json to match     your local SQL Server setup.
+
+# How to Run the API
+Prerequisites
+- .NET 10 SDK
+- Visual Studio or another .NET-compatible development environment
+- SQL Server configured for the application
+
+Steps
+- Clone the repository.
+- Open a terminal in the repository's root directory.
+- Restore the solution's dependencies: dotnet restore RaceDay.Api/RaceDay.Api.slnx
+- Build the solution: dotnet build RaceDay.Api/RaceDay.Api.slnx
+- Run the API project: Open the solution in Visual Studio, set RaceDay.Api as the startup project,    and run it using the configured HTTPS profile.
+- Ensure the database connection string is configured correctly before testing database-dependent     functionality.
+
+# Authentication and Authorisation
+The API provides registration and login functionality for supported user roles. Authentication is used to identify users, while role-based authorisation restricts access to protected functionality.
+
+The API includes functionality for participant and organiser accounts. Protected endpoints should be tested using the appropriate authentication credentials and user role.
+
+# API Endpoints
+The API exposes endpoints for authentication, events, participant profiles, enrolments, results, and categories.
+
+The main endpoint groups include:
+- Authentication: Account registration and login.
+- Events: Retrieve event information and access event-related operations.
+- Profiles: Access participant profile functionality.
+- Enrolments: Access participant enrolment information.
+- Results: Access participant results.
+- Categories: Retrieve event category information.
+
+Refer to the API endpoint plan in docs/ and the implemented controllers for the complete list of routes, HTTP methods, request formats, and response codes.
+
+# Swagger / OpenAPI
+Swagger provides an interactive interface for exploring and testing the API endpoints.
+
+When the API is running in the Development environment, open:
+
+https://localhost:7257/swagger
+
+The port may differ depending on the selected launch profile.
+
+# Unit Testing
+- The RaceDay.Api.Tests project contains automated unit tests written using xUnit.
+- The tests cover scenarios involving authentication, event operations, access restrictions, participant functionality, and category retrieval.
+- Run the tests from the repository root: dotnet test RaceDay.Api/RaceDay.Api.slnx --configuration Release
+- Review the test output to confirm the number of passed, failed, and skipped tests.
+
+# CI/CD: GitHub Actions
+GitHub Actions is configured to run the RaceDay CI workflow when changes are pushed to the main branch or a pull request targets that branch.
+
+The workflow performs the following steps:
+- Checks out the repository.
+- Installs the required .NET SDK.
+- Restores project dependencies.
+- Builds the solution.
+- Runs the automated tests.
+
+This workflow helps verify that the solution builds and its tests pass in the GitHub Actions environment.
+
 # YouTube Video Link
 - https://youtu.be/UF6xu5px2Qc
 
