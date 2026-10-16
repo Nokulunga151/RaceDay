@@ -11,6 +11,6 @@
 
         public string PasswordHash { get; set; }
 
-        public ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>();
+        public ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>(); 
     }
 }
