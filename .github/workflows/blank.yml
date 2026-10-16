@@ -27,5 +27,5 @@ jobs:
         run: dotnet build RaceDay.sln --configuration Release --no-restore
 
       - name: Run unit tests
-        run: dotnet test RaceDay.sln --configuration Release --no-build
+        run: dotnet test RaceDay.Api.slnx --configuration Release --no-build
       
