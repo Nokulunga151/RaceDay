@@ -10,7 +10,7 @@ COPY ["RaceDay.Contracts/RaceDay.Contracts.csproj", "RaceDay.Contracts/"]
 
 # Restore dependencies 
 RUN dotnet restore "RaceDay.Api/RaceDay.Api.csproj"
-
+ 
 # Copy the remaining source files 
 COPY . .
 
