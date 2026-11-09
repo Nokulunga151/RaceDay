@@ -163,5 +163,8 @@ This workflow helps verify that the solution builds and its tests pass in the Gi
 - https://youtu.be/UF6xu5px2Qc
 
 
+# Part 2 Video Link
+- https://youtu.be/R-Dpc4LtVNY
+
 
    
