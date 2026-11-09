@@ -159,12 +159,90 @@ The workflow performs the following steps:
 
 This workflow helps verify that the solution builds and its tests pass in the GitHub Actions environment.
 
+# Part 3: MVC Integration, Azure Blob Storage and Containerisation
+Part 3 extends the RaceDay system with an MVC web application, cloud file storage integration and Docker container configuration.
+
+# Technologies Used
+- C#
+- ASP.NET Core MVC
+- ASP.NET Core Web API
+- .NET 10
+- Entity Framework Core
+- Microsoft SQL Server
+- SQL Server LocalDB
+- Azure Blob Storage
+- Azure Storage SDK
+- Docker
+- Docker Compose
+- GitHub Actions
+
+# MVC Integration
+The MVC application provides a web-based interface for interacting with the RaceDay API.
+
+The application communicates with the API through an API client and provides functionality for interacting with event-related operations.
+
+# Azure Blob Storage Integration
+Azure Blob Storage is used to store event-related files uploaded through the RaceDay application.
+
+The integration includes:
+- Uploading event files to Azure Blob Storage.
+- Storing file references in the RaceDay database.
+- Validating uploaded file types and sizes.
+- Generating Shared Access Signature (SAS) URLs for controlled file access.
+- Displaying uploaded files on event details pages.
+
+# Docker Configuration
+
+Docker configuration is included to support containerisation of the RaceDay application.
+
+The repository includes:
+- RaceDay.Api/Dockerfile – Defines the API container image.
+- RaceDay.Mvc/Dockerfile – Defines the MVC container image.
+- docker-compose.yml – Defines the services required to run the application, including SQL Server, API and MVC.
+
+The Docker Compose configuration uses environment variables for application settings and sensitive configuration values.
+
+# Environment Configuration
+
+Create a .env file in the repository root when using Docker Compose. 
+
+# CI/CD: GitHub Actions
+
+GitHub Actions is configured to automatically check the RaceDay project when changes are pushed to the repository or when a pull request targets the configured branch.
+
+The workflow performs the following steps:
+- Checks out the repository.
+- Installs the required .NET SDK.
+- Restores project dependencies.
+- Builds the solution.
+- Runs automated tests.
+
+# Technologies Used Across the Project
+- C#
+- .NET 10
+- ASP.NET Core Web API
+- ASP.NET Core MVC
+- Entity Framework Core
+- Microsoft SQL Server
+- SQL Server LocalDB
+- Azure Blob Storage
+- Swagger / OpenAPI
+- xUnit
+- Docker
+- Docker Compose
+- GitHub Actions
+- Visual Studio
+- Git and GitHub
+
 # YouTube Video Link
 - https://youtu.be/UF6xu5px2Qc
 
 
 # Part 2 Video Link
 - https://youtu.be/R-Dpc4LtVNY
+
+# Part 3 Video Link
+-
 
 
    
