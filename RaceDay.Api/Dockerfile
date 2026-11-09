@@ -8,7 +8,7 @@ WORKDIR /src
 COPY ["RaceDay.Api/RaceDay.Api.csproj", "RaceDay.Api/"]
 COPY ["RaceDay.Contracts/RaceDay.Contracts.csproj", "RaceDay.Contracts/"]
 
-# Restore dependencies
+# Restore dependencies 
 RUN dotnet restore "RaceDay.Api/RaceDay.Api.csproj"
 
 # Copy the remaining source files
