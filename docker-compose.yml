@@ -13,7 +13,7 @@ services:
 
   api:
     build: 
-      context: .
+      context: . 
       dockerfile: RaceDay.Api/Dockerfile   
     container_name: raceday-api  
     ports:
