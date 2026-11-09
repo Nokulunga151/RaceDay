@@ -42,7 +42,7 @@ namespace RaceDay.Api.Controllers
             {
                 if (string.IsNullOrWhiteSpace(dto.FirstName) ||
                     string.IsNullOrWhiteSpace(dto.LastName))
-                {
+                { 
                     return BadRequest(
                         "Organisers First Name and Last Name are required.");
                 }
