@@ -15,7 +15,7 @@ services:
     build: 
       context: .
       dockerfile: RaceDay.Api/Dockerfile  
-    container_name: raceday-api
+    container_name: raceday-api 
     ports:
       - "8080:8080"
     environment:
