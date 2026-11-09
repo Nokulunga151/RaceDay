@@ -16,7 +16,7 @@ COPY . .
 
 # Publish the API  
 WORKDIR /src/RaceDay.Api 
-RUN dotnet publish "RaceDay.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "RaceDay.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false 
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
