@@ -1,0 +1,75 @@
+﻿@model List<EnrolmentViewModel>
+
+@{
+    ViewData["Title"] = "My Events";
+}
+
+<h1>My Events</h1>
+<p class="text-muted">Your race registrations and enrolments.</p>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        You haven't entered any events yet.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover bg-white">
+            <thead class="table-dark">
+                <tr>
+                    <th>Enrolment ID</th>
+                    <th>Event ID</th>
+                    <th>Category ID</th>
+                    <th>Enrolment Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.EnrolmentID</td>
+                        <td>@item.EventID</td>
+                        <td>@item.CategoryID</td>
+                        <td>@item.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                        <td>
+                            <span class="badge bg-info text-dark">
+                                @item.EnrolmentStatus
+                            </span>
+                        </td>
+                        <td>
+                            <form asp-action="CancelEnrolment"
+                                  method="post"
+                                  onsubmit="return confirm('Are you sure you want to cancel this enrolment?');">
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@item.EnrolmentID" />
+
+                                <button type="submit"
+                                        class="btn btn-sm btn-outline-danger">
+                                    Cancel
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

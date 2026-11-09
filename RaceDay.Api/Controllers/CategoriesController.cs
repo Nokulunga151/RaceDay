@@ -27,7 +27,6 @@ namespace RaceDay.Api.Controllers
                 .Where(c => c.EventID == eventId)
                 .ToListAsync();
 
-            if (!categories.Any()) return NotFound("Event not found or no categories");
             return Ok(categories);
 
         }
@@ -50,7 +49,15 @@ namespace RaceDay.Api.Controllers
 
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
-            return StatusCode(201, category);
+
+            return StatusCode(201, new
+            {
+                category.CategoryID,
+                category.CategoryName,
+                category.Distance,
+                category.EntryFee,
+                category.EventID
+            });
 
         }
 
@@ -66,7 +73,15 @@ namespace RaceDay.Api.Controllers
             category.EntryFee = dto.EntryFee;
 
             await _context.SaveChangesAsync();
-            return Ok(category);
+
+            return Ok(new
+            {
+                category.CategoryID,
+                category.CategoryName,
+                category.Distance,
+                category.EntryFee,
+                category.EventID
+            });
 
         }
 

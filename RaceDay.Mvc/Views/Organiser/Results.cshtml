@@ -1,0 +1,86 @@
+﻿@model List<ResultViewModel>
+
+@{
+    ViewData["Title"] = "Event Results";
+}
+
+<h1>Event Results</h1>
+<p class="text-muted">Event ID: @ViewBag.EventId</p>
+
+<div class="card race-card p-4 mb-4">
+    <h4>Add a Result</h4>
+
+    <form asp-action="AddResult" method="post">
+        <input type="hidden" name="eventId" value="@ViewBag.EventId" />
+
+        <div class="mb-3">
+            <label class="form-label">Result ID</label>
+            <input name="ResultID" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Enrolment ID</label>
+            <input name="EnrolmentID" type="number"
+                   class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Finish Time</label>
+            <input name="FinishTime" class="form-control"
+                   placeholder="01:25:30" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Position</label>
+            <input name="Position" type="number" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Result Status</label>
+            <select name="ResultStatus" class="form-select">
+                <option value="Completed">Completed</option>
+                <option value="Pending">Pending</option>
+                <option value="Disqualified">Disqualified</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Save Result
+        </button>
+    </form>
+</div>
+
+<h4>Recorded Results</h4>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No results have been recorded yet.</div>
+}
+else
+{
+    <table class="table table-hover bg-white">
+        <thead class="table-dark">
+            <tr>
+                <th>Result ID</th>
+                <th>Enrolment ID</th>
+                <th>Finish Time</th>
+                <th>Position</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model)
+            {
+                <tr>
+                    <td>@result.ResultID</td>
+                    <td>@result.EnrolmentID</td>
+                    <td>@result.FinishTime</td>
+                    <td>@result.Position</td>
+                    <td>@result.ResultStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Back to Dashboard</a>

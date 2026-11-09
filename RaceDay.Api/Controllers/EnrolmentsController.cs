@@ -23,26 +23,33 @@ namespace RaceDay.Api.Controllers
         
         public async Task<IActionResult> CreateEnrolment(CreateEnrolmentRequest dto)
         {
-            var eventId = dto.EventID;
+            var participantId = HttpContext.Session.GetInt32("UserId");
 
-            var ev = await _context.Events.FindAsync(eventId);
-            if (ev == null) return NotFound("Event not found.");
+            if (participantId == null)
+                return Unauthorized();
+
+            var ev = await _context.Events.FindAsync(dto.EventID);
+
+            if (ev == null)
+                return NotFound("Event not found.");
 
             var category = await _context.Categories.FindAsync(dto.CategoryID);
-            if (category == null) return NotFound("Category not found.");
 
-            var participantId = HttpContext.Session.GetInt32("UserId");
-            if (participantId == null) return Unauthorized();
+            if (category == null || category.EventID != dto.EventID)
+                return NotFound("Category not found for this event.");
 
             var alreadyEnrolled = await _context.Enrolments
-                .AnyAsync(e => e.EventID == eventId && e.ParticipantID == participantId);
-            if (alreadyEnrolled) return Conflict("Already enrolled.");
+                .AnyAsync(e => e.EventID == dto.EventID
+                    && e.ParticipantID == participantId.Value);
+
+            if (alreadyEnrolled)
+                return Conflict("Already enrolled.");
 
             var enrolment = new Enrolment
             {
                 EnrolmentID = Guid.NewGuid().ToString(),
                 ParticipantID = participantId.Value,
-                EventID = eventId,
+                EventID = dto.EventID,
                 CategoryID = dto.CategoryID,
                 EnrolmentDate = DateTime.UtcNow,
                 EnrolmentStatus = "Pending"
@@ -50,6 +57,7 @@ namespace RaceDay.Api.Controllers
 
             _context.Enrolments.Add(enrolment);
             await _context.SaveChangesAsync();
+
             return StatusCode(201, enrolment);
 
         }
@@ -62,7 +70,7 @@ namespace RaceDay.Api.Controllers
             if (participantId == null) return Unauthorized();
 
             var enrolments = await _context.Enrolments
-                .Where(e => e.ParticipantID == participantId)
+                .Where(e => e.ParticipantID == participantId.Value)
                 .ToListAsync();
 
             return Ok(enrolments);
@@ -73,13 +81,70 @@ namespace RaceDay.Api.Controllers
         [Authorize(Roles = "Participant")]
         public async Task<IActionResult> CancelEnrolment(string id)
         {
-            var enrolment = await _context.Enrolments.FindAsync(id);
-            if (enrolment == null) return NotFound();
+            var participantId = HttpContext.Session.GetInt32("UserId");
+
+            if (participantId == null)
+                return Unauthorized();
+
+            var enrolment = await _context.Enrolments
+                .Include(e => e.Result)
+                .FirstOrDefaultAsync(e => e.EnrolmentID == id);
+
+            if (enrolment == null)
+                return NotFound("Enrolment not found.");
+
+            if (enrolment.ParticipantID != participantId.Value)
+                return Forbid();
+
+            if (enrolment.Result != null)
+                return Conflict("This enrolment cannot be cancelled because a result has already been recorded.");
 
             _context.Enrolments.Remove(enrolment);
             await _context.SaveChangesAsync();
-            return Ok("Enrolment cancelled");
+
+            return Ok("Enrolment cancelled successfully.");
         }
+
+
+
+        [HttpGet("event/{eventId}")]
+        [Authorize(Roles = "Organiser")]
+        public async Task<IActionResult> GetEventEnrolments(string eventId)
+        {
+            var organiserId = HttpContext.Session.GetInt32("UserId");
+
+            if (organiserId == null)
+                return Unauthorized();
+
+            var ev = await _context.Events.FindAsync(eventId);
+
+            if (ev == null)
+                return NotFound("Event not found.");
+
+            if (ev.OrganiserID != organiserId.Value)
+                return Forbid();
+
+            var enrolments = await _context.Enrolments
+                .Where(e => e.EventID == eventId)
+                .Include(e => e.Participant)
+                .Select(e => new
+                {
+                    e.EnrolmentID,
+                    e.EventID,
+                    e.CategoryID,
+                    e.EnrolmentDate,
+                    e.EnrolmentStatus,
+                    e.ParticipantID,
+                    ParticipantName = e.Participant.Name,
+                    ParticipantSurname = e.Participant.Surname,
+                    ParticipantEmail = e.Participant.Email,
+                    ParticipantPhone = e.Participant.Phone
+                })
+                .ToListAsync();
+
+            return Ok(enrolments);
+        }
+
 
     }
 }

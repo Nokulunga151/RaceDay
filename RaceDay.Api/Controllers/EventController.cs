@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RaceDay.Api.Data;
 using RaceDay.Api.Models;
 using RaceDay.Contracts;
+using RaceDay.Api.Services;
 
 namespace RaceDay.Api.Controllers
 {
@@ -14,53 +15,61 @@ namespace RaceDay.Api.Controllers
     {
         private readonly RaceDayDBContext _context;
 
-        public EventController(RaceDayDBContext context) 
+        private readonly IAzureBlobStorageService _blobStorage;
+
+
+        public EventController(RaceDayDBContext context, IAzureBlobStorageService blobStorage) 
         {
             _context = context;
+            _blobStorage = blobStorage;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetEvents()
         {
-            var events = await _context.Events
-                .Select(e => new
-                {
-                    e.EventID,
-                    e.EventName,
-                    e.EventDate,
-                    e.Location,
-                    e.Description,
-                    e.Distance,
-                    e.EventType,
-                    e.OrganiserID
-                })
-                .ToListAsync();
+            var events = await _context.Events.ToListAsync();
 
-            return Ok(events);
+            var result = events.Select(e => new
+            {
+                e.EventID,
+                e.EventName,
+                e.EventDate,
+                e.Location,
+                e.Description,
+                e.Distance,
+                e.EventType,
+                e.OrganiserID,
+                FileUrl = string.IsNullOrEmpty(e.FileUrl)
+                    ? null
+                    : _blobStorage.GetReadUrl(e.FileUrl)
+            });
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEvent(string id)
         {
             var eventItem = await _context.Events
-                .Where(e => e.EventID == id)
-                .Select(e => new
-                {
-                    e.EventID,
-                    e.EventName,
-                    e.EventDate,
-                    e.Location,
-                    e.Description,
-                    e.Distance,
-                    e.EventType,
-                    e.OrganiserID
-                })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(e => e.EventID == id);
 
             if (eventItem == null)
                 return NotFound("Event not found");
 
-            return Ok(eventItem);
+            return Ok(new
+            {
+                eventItem.EventID,
+                eventItem.EventName,
+                eventItem.EventDate,
+                eventItem.Location,
+                eventItem.Description,
+                eventItem.Distance,
+                eventItem.EventType,
+                eventItem.OrganiserID,
+                FileUrl = string.IsNullOrEmpty(eventItem.FileUrl)
+                    ? null
+                    : _blobStorage.GetReadUrl(eventItem.FileUrl)
+            });
         }
 
         [HttpGet("mine")]
@@ -79,7 +88,22 @@ namespace RaceDay.Api.Controllers
                 .Where(e => e.OrganiserID == userId.Value)
                 .ToListAsync();
 
-            return Ok(events);
+            var result = events.Select(e => new
+            {
+                e.EventID,
+                e.EventName,
+                e.EventDate,
+                e.Location,
+                e.Description,
+                e.Distance,
+                e.EventType,
+                e.OrganiserID,
+                FileUrl = string.IsNullOrEmpty(e.FileUrl)
+                    ? null
+                    : _blobStorage.GetReadUrl(e.FileUrl)
+            });
+
+            return Ok(result);
 
         }
 
@@ -131,6 +155,59 @@ namespace RaceDay.Api.Controllers
                 newEvent);
         }
 
+
+        [HttpPost("{id}/file")]
+        public async Task<IActionResult> UploadEventFile(string id, IFormFile file)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var role = HttpContext.Session.GetString("Role");
+
+            if (userId == null)
+                return Unauthorized();
+
+            if (role != "Organiser")
+                return Forbid();
+
+            var eventItem = await _context.Events
+                .FirstOrDefaultAsync(e => e.EventID == id);
+
+            if (eventItem == null)
+                return NotFound("Event not found.");
+
+            if (eventItem.OrganiserID != userId.Value)
+                return Forbid();
+
+            if (file == null || file.Length == 0)
+                return BadRequest("Please select a file.");
+
+            if (file.Length > 10 * 1024 * 1024)
+                return BadRequest("File size cannot exceed 10 MB.");
+
+            var allowedExtensions = new[]
+            {
+                ".jpg", ".jpeg", ".png", ".gif", ".webp", ".pdf"
+            };
+
+            string extension = Path.GetExtension(file.FileName)
+                .ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(extension))
+                return BadRequest("Only JPG, JPEG, PNG, GIF, WEBP and PDF files are allowed.");
+
+            string blobUrl = await _blobStorage.UploadFileAsync(file, id);
+
+            eventItem.FileUrl = blobUrl;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "File uploaded successfully.",
+                fileUrl = _blobStorage.GetReadUrl(blobUrl)
+            });
+        }
+
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEvents(string id, UpdateEventRequest dto)
         {
@@ -175,7 +252,7 @@ namespace RaceDay.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEvent(string id)
         {
-            var userId = HttpContext.Session.GetInt32("userId");
+            var userId = HttpContext.Session.GetInt32("UserId");
             var role = HttpContext.Session.GetString("Role");
 
             if (userId == null)

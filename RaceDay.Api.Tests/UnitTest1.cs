@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using RaceDay.Api.Services;
 
 
 namespace RaceDay.Api.Tests
@@ -24,6 +25,21 @@ namespace RaceDay.Api.Tests
 
             return new RaceDayDBContext(options);
         }
+
+        private class FakeAzureBlobStorageService : IAzureBlobStorageService
+        {
+            public Task<string> UploadFileAsync(
+                IFormFile file, string eventId)
+            {
+                return Task.FromResult("https://example.com/test-file.jpg");
+            }
+
+            public string GetReadUrl(string blobUrl)
+            {
+                return blobUrl;
+            }
+        }
+
 
         private static void SetSession(
             ControllerBase controller,
@@ -120,7 +136,7 @@ namespace RaceDay.Api.Tests
         public async Task GetEvents_NoEvents_ReturnsOk()
         {
             using var db = CreateContext();
-            var controller = new EventController(db);
+            var controller = new EventController(db, new FakeAzureBlobStorageService());
 
             var result = await controller.GetEvents();
 
@@ -132,7 +148,7 @@ namespace RaceDay.Api.Tests
         public async Task GetEvent_EventDoesNotExist_ReturnsNotFound()
         {
             using var db = CreateContext();
-            var controller = new EventController(db);
+            var controller = new EventController(db, new FakeAzureBlobStorageService());
 
             var result = await controller.GetEvent("missing-event");
 
@@ -143,7 +159,7 @@ namespace RaceDay.Api.Tests
         public async Task CreateEvent_NoSession_ReturnsUnauthorized()
         {
             using var db = CreateContext();
-            var controller = new EventController(db);
+            var controller = new EventController(db, new FakeAzureBlobStorageService());
 
             SetSession(controller);
 
@@ -158,7 +174,7 @@ namespace RaceDay.Api.Tests
         public async Task CreateEvent_ParticipantRole_ReturnsForbid()
         {
             using var db = CreateContext();
-            var controller = new EventController(db);
+            var controller = new EventController(db, new FakeAzureBlobStorageService());
 
             SetSession(controller, 1, "Participant");
 

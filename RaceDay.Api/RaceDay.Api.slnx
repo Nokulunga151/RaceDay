@@ -1,5 +1,10 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../docker-compose.yml" />
+    <File Path=".env" />
+  </Folder>
   <Project Path="../RaceDay.Api.Tests/RaceDay.Api.Tests.csproj" Id="e9163ce5-2418-47b4-9c8b-1346d8a6db5a" />
   <Project Path="../RaceDay.Contracts/RaceDay.Contracts.csproj" Id="e08ee82e-2f52-4d84-b00d-50c16b6e94a3" />
+  <Project Path="../RaceDay.Mvc/RaceDay.Mvc.csproj" Id="ee11418b-25ec-46db-8c18-fd814118004e" />
   <Project Path="RaceDay.Api.csproj" />
 </Solution>

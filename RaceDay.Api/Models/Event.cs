@@ -16,5 +16,7 @@
 
         public ICollection<Category> Categories { get; set; } = new List<Category>();
         public ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>();
+
+        public string? FileUrl { get; set; }
     }
 }

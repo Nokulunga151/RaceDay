@@ -1,0 +1,44 @@
+﻿@model List<ResultViewModel>
+
+@{
+    ViewData["Title"] = "My Results";
+}
+
+<h1>My Race Results</h1>
+<p class="text-muted">Track your race performance and achievements.</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        You don't have any results available yet.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover bg-white">
+            <thead class="table-dark">
+                <tr>
+                    <th>Result ID</th>
+                    <th>Enrolment ID</th>
+                    <th>Finish Time</th>
+                    <th>Position</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var result in Model)
+                {
+                    <tr>
+                        <td>@result.ResultID</td>
+                        <td>@result.EnrolmentID</td>
+                        <td>@result.FinishTime</td>
+                        <td>@result.Position</td>
+                        <td>@result.ResultStatus</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

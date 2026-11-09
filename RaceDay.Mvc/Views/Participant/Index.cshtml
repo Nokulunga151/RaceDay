@@ -1,0 +1,60 @@
+﻿@model List<EventViewModel>
+
+@{
+    ViewData["Title"] = "Participant Dashboard";
+}
+
+<h1>Participant Dashboard</h1>
+<p class="text-muted">Welcome to RaceDay. Find your next challenge!</p>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <a asp-action="MyEvents" class="btn btn-primary w-100 p-3">
+            View My Events
+        </a>
+    </div>
+
+    <div class="col-md-4">
+        <a asp-action="MyResults" class="btn btn-outline-primary w-100 p-3">
+            View My Results
+        </a>
+    </div>
+
+    <div class="col-md-4">
+        <a asp-action="Profile" class="btn btn-outline-primary w-100 p-3">
+            My Profile
+        </a>
+    </div>
+</div>
+
+<h3>Upcoming Events</h3>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No events are currently available.</div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card race-card h-100">
+                    <div class="card-body">
+                        <h5>@item.EventName</h5>
+                        <p>@item.Location</p>
+                        <p>@item.EventDate.ToString("dd MMM yyyy")</p>
+                        <p>@item.Distance km</p>
+
+                        <a asp-controller="Events"
+                           asp-action="Details"
+                           asp-route-id="@item.EventID"
+                           class="btn btn-primary w-100">
+                            View Event
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

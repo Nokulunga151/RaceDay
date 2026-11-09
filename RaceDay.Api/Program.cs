@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using RaceDay.Api.Data;
+using System.Security.Claims;
+using System.Security.Principal;
+using RaceDay.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,8 @@ builder.Services.AddOpenApi();
 
 
 builder.Services.AddDbContext<RaceDayDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("RaceDayConnection")));
+
+builder.Services.AddSingleton<IAzureBlobStorageService, AzureBlobStorageService>();
 
 builder.Services.AddDistributedMemoryCache();
 
@@ -28,6 +33,28 @@ app.UseRouting();
 app.UseSession();
 
 
+// Convert the API session values into claims for [Authorize].
+app.Use(async (context, next) =>
+{
+    var userId = context.Session.GetInt32("UserId");
+    var role = context.Session.GetString("Role");
+
+    if (userId.HasValue && !string.IsNullOrWhiteSpace(role))
+    {
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, userId.Value.ToString()),
+            new Claim(ClaimTypes.Role, role)
+        };
+
+        var identity = new ClaimsIdentity(claims, "Session");
+        context.User = new ClaimsPrincipal(identity);
+    }
+
+    await next();
+});
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -35,7 +62,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint(
-            "/openapi/v1.json",
+            "https://localhost:7257/openapi/v1.json",
             "RaceDay API v1");
     });
 }

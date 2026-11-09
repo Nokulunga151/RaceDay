@@ -1,0 +1,58 @@
+﻿@model List<EnrolmentManagementViewModel>
+
+@{
+    ViewData["Title"] = "Event Enrolments";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Event Enrolments</h1>
+        <p class="text-muted">Participants registered for this event.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        Back to Dashboard
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No participants have enrolled in this event yet.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover bg-white align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Participant</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Category ID</th>
+                    <th>Enrolment Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ParticipantName @item.ParticipantSurname</td>
+                        <td>@item.ParticipantEmail</td>
+                        <td>@item.ParticipantPhone</td>
+                        <td>@item.CategoryID</td>
+                        <td>@item.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                        <td>
+                            <span class="badge bg-info text-dark">
+                                @item.EnrolmentStatus
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,43 @@
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: raceday-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "RaceDay_StrongPass123!"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  api:
+    build:
+      context: .
+      dockerfile: RaceDay.Api/Dockerfile
+    container_name: raceday-api
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ConnectionStrings__RaceDayConnection: "Server=sqlserver,1433;Database=RaceDayDb;User Id=sa;Password=RaceDay_StrongPass123!;TrustServerCertificate=True;Encrypt=False"
+      AzureStorage__ContainerName: "raceday-files"
+      AzureStorage__ConnectionString: "${AZURE_STORAGE_CONNECTION_STRING}"
+    depends_on:
+      - sqlserver
+
+  mvc:
+    build:
+      context: .
+      dockerfile: RaceDay.Mvc/Dockerfile
+    container_name: raceday-mvc
+    ports:
+      - "8081:8080"
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ApiSettings__BaseUrl: "http://api:8080/"
+    depends_on:
+      - api
+
+volumes:
+  sql_data:

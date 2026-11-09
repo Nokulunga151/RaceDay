@@ -1,0 +1,52 @@
+﻿@model List<EventViewModel>
+
+@{
+    ViewData["Title"] = "Events";
+}
+
+<div class="mb-4">
+    <h1>Discover Events</h1>
+    <p class="text-muted">Find your next race and challenge yourself.</p>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No events are currently available.
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card race-card h-100">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">
+                            @item.EventType
+                        </span>
+
+                        <h4>@item.EventName</h4>
+
+                        <p class="text-muted">
+                            @item.Description
+                        </p>
+
+                        <hr />
+
+                        <p><strong>Date:</strong> @item.EventDate.ToString("dd MMM yyyy")</p>
+                        <p><strong>Location:</strong> @item.Location</p>
+                        <p><strong>Distance:</strong> @item.Distance km</p>
+
+                        <a asp-action="Details"
+                           asp-route-id="@item.EventID"
+                           class="btn btn-primary w-100">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
