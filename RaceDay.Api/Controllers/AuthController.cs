@@ -47,7 +47,7 @@ namespace RaceDay.Api.Controllers
                         "Organisers First Name and Last Name are required.");
                 }
 
-                var organiser = new Organiser
+                var organiser = new Organiser 
                 {
                     FirstName = dto.FirstName.Trim(),
                     LastName = dto.LastName.Trim(),
