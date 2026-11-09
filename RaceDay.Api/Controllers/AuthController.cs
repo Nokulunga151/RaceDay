@@ -44,7 +44,7 @@ namespace RaceDay.Api.Controllers
                     string.IsNullOrWhiteSpace(dto.LastName))
                 { 
                     return BadRequest(
-                        "Organisers First Name and Last Name are required.");
+                        "Organisers First Name and Last Name are required."); 
                 }
 
                 var organiser = new Organiser 
