@@ -15,7 +15,7 @@ RUN dotnet restore "RaceDay.Api/RaceDay.Api.csproj"
 COPY . .
 
 # Publish the API  
-WORKDIR /src/RaceDay.Api
+WORKDIR /src/RaceDay.Api 
 RUN dotnet publish "RaceDay.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Runtime stage
